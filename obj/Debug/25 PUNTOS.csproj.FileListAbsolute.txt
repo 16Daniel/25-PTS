@@ -1,0 +1,10 @@
+C:\Users\Abel\source\repos\25 PUNTOS\bin\Debug\25 PUNTOS.exe.config
+C:\Users\Abel\source\repos\25 PUNTOS\bin\Debug\25 PUNTOS.exe
+C:\Users\Abel\source\repos\25 PUNTOS\bin\Debug\25 PUNTOS.pdb
+C:\Users\Abel\source\repos\25 PUNTOS\obj\Debug\25 PUNTOS.csprojAssemblyReference.cache
+C:\Users\Abel\source\repos\25 PUNTOS\obj\Debug\_25_PUNTOS.Properties.Resources.resources
+C:\Users\Abel\source\repos\25 PUNTOS\obj\Debug\25 PUNTOS.csproj.GenerateResource.cache
+C:\Users\Abel\source\repos\25 PUNTOS\obj\Debug\25 PUNTOS.csproj.CoreCompileInputs.cache
+C:\Users\Abel\source\repos\25 PUNTOS\obj\Debug\25 PUNTOS.exe
+C:\Users\Abel\source\repos\25 PUNTOS\obj\Debug\25 PUNTOS.pdb
+C:\Users\Abel\source\repos\25 PUNTOS\obj\Debug\_25_PUNTOS.Form1.resources
