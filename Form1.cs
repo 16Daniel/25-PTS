@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using DesktopControl;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace _25_PUNTOS
 {
@@ -25,10 +26,16 @@ namespace _25_PUNTOS
         public string Inicio = ConfigurationManager.AppSettings.Get("Inicio");
         public string Fin = ConfigurationManager.AppSettings.Get("Fin");
 
+        private Timer timer;
 
         public Form1()
         {
-            
+            if (getPrevInstance())
+            {
+                this.Close();
+                Application.Exit();
+                Application.ExitThread();
+            }
 
             InitializeComponent();
             
@@ -39,9 +46,87 @@ namespace _25_PUNTOS
             {
                 conexion = dirCon.crearConexion();
                 AsignaIntervalo();
+                // Configura el Timer
+                timer = new Timer();
+                timer.Interval = 60000; // Establece el intervalo en milisegundos (cada minuto)
+                timer.Tick += Timer_Tick;
 
+                // Inicia el Timer
+                timer.Start();
             }
         }
+
+        private static bool getPrevInstance()
+        {
+            //get the name of current process, i,e the process 
+            //name of this current application
+
+            string currPrsName = Process.GetCurrentProcess().ProcessName;
+
+            //Get the name of all processes having the 
+            //same name as this process name 
+            Process[] allProcessWithThisName
+                         = Process.GetProcessesByName(currPrsName);
+
+            //if more than one process is running return true.
+            //which means already previous instance of the application 
+            //is running
+            if (allProcessWithThisName.Length > 1)
+            {
+                MessageBox.Show("YA SE ESTA EJECUTANDO");
+
+                return true; // Yes Previous Instance Exist
+            }
+            else
+            {
+                return false; //No Prev Instance Running
+            }
+        }
+
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            // Verifica si es 11 AM
+            if (DateTime.Now.Hour == 11 && DateTime.Now.Minute == 0)
+            {
+                // Ejecuta tu método
+                InsertTest();
+            }
+        }
+        private void InsertTest()
+        {
+            conexion.Open();
+
+            SqlCommand command = new SqlCommand("INSERT INTO TAYC25 (FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO) VALUES (@Fecha, @Sala, @Mesa, @TotalAYC, @Cobros, @CobrosMin, @Diferencia, @Justificacion, @Usu)", conexion);
+
+            command.Parameters.Add("@Fecha", SqlDbType.DateTime).Value = DateTime.Now;
+            command.Parameters.Add("@Sala", SqlDbType.SmallInt).Value = 0;
+            command.Parameters.Add("@Mesa", SqlDbType.SmallInt).Value = 0;
+            command.Parameters.Add("@TotalAYC", SqlDbType.Int).Value = 0;
+            command.Parameters.Add("@Cobros", SqlDbType.Int).Value = 0;
+            command.Parameters.Add("@CobrosMin", SqlDbType.Int).Value = 0;
+            command.Parameters.Add("@Diferencia", SqlDbType.Int).Value = 0;
+            command.Parameters.Add("@Justificacion", SqlDbType.NVarChar).Value = "prueba";
+            command.Parameters.Add("@Usu", SqlDbType.NVarChar).Value = "prueba";
+
+
+            try
+            {
+
+                command.ExecuteNonQuery();
+                //MessageBox.Show("Guardado", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                conexion.Close();
+
+
+
+            }
+            catch
+            {
+                conexion.Close();
+                //MessageBox.Show("Guardado", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+        }
+
         private void AsignaIntervalo() {
             int Segundos = int.Parse(ConfigurationManager.AppSettings.Get("Fin"));
             timerAbiertas.Interval = Segundos * 1000;

@@ -22,3 +22,15 @@ C:\Users\Daniel\source\repos\25 PUNTOS\bin\Release\25 PUNTOS.exe.config
 C:\Users\Daniel\source\repos\25 PUNTOS\bin\Release\25 PUNTOS.exe
 C:\Users\Daniel\source\repos\25 PUNTOS\bin\Release\25 PUNTOS.pdb
 C:\Users\Daniel\source\repos\25 PUNTOS\obj\Release\25 PUNTOS.csproj.CopyComplete
+D:\repositorios git\25-PTS\bin\Release\25 PUNTOS.exe.config
+D:\repositorios git\25-PTS\bin\Release\25 PUNTOS.exe
+D:\repositorios git\25-PTS\bin\Release\25 PUNTOS.pdb
+D:\repositorios git\25-PTS\obj\Release\25 PUNTOS.csproj.AssemblyReference.cache
+D:\repositorios git\25-PTS\obj\Release\_25_PUNTOS.ConexServ.resources
+D:\repositorios git\25-PTS\obj\Release\_25_PUNTOS.Form1.resources
+D:\repositorios git\25-PTS\obj\Release\_25_PUNTOS.Properties.Resources.resources
+D:\repositorios git\25-PTS\obj\Release\25 PUNTOS.csproj.GenerateResource.cache
+D:\repositorios git\25-PTS\obj\Release\25 PUNTOS.csproj.CoreCompileInputs.cache
+D:\repositorios git\25-PTS\obj\Release\25 PUNTOS.csproj.CopyComplete
+D:\repositorios git\25-PTS\obj\Release\25 PUNTOS.exe
+D:\repositorios git\25-PTS\obj\Release\25 PUNTOS.pdb
