@@ -66,7 +66,7 @@ namespace _25_PUNTOS
                     using (var comando = new SqlCommand())
                     {
                         comando.Connection = conexion;
-                        comando.CommandText = "CREATE TABLE [TAYC25]([FECHAINI] [dbo].[DDATE] NULL,[SALA] [dbo].[DSMALLINT] NOT NULL,[MESA] [dbo].[DSMALLINT] NOT NULL,[TOTAL_AYC] [int] NULL,[COBROS] [int] NULL,[COBROS_MINIMOS] [int] NULL,[DIFERENCIA] [int] NOT NULL,[JUSTIFICACION] [nvarchar](max) NOT NULL,[USUARIO] [nvarchar](50) NULL, [ENVIADO] [varchar](20) NULL) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
+                        comando.CommandText = "CREATE TABLE [TAYC25]([FECHAINI] [dbo].[DDATE] NULL,[SALA] [dbo].[DSMALLINT] NOT NULL,[MESA] [dbo].[DSMALLINT] NOT NULL,[TOTAL_AYC] [int] NULL,[COBROS] [int] NULL,[COBROS_MINIMOS] [int] NULL,[DIFERENCIA] [int] NOT NULL,[JUSTIFICACION] [nvarchar](max) NOT NULL,[USUARIO] [nvarchar](50) NULL, [ENVIADO] [varchar](20) NULL,[VENDEDOR] [varchar](500) NULL) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
                         comando.CommandType = CommandType.Text;
                         comando.ExecuteNonQuery();
                     }
@@ -75,6 +75,17 @@ namespace _25_PUNTOS
             MessageBox.Show("Se Creo Tabla ", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch {
+                using (var conexion = dirCon.crearConexion())
+                {
+                    conexion.Open();
+                    using (var comando = new SqlCommand())
+                    {
+                        comando.Connection = conexion;
+                        comando.CommandText = "IF NOT EXISTS ( SELECT 1  FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TAYC25' AND COLUMN_NAME = 'VENDEDOR') BEGIN ALTER TABLE TAYC25 ADD VENDEDOR NVARCHAR(500); END";
+                        comando.CommandType = CommandType.Text;
+                        comando.ExecuteNonQuery();
+                    }
+                }
                 MessageBox.Show("Ya existe la Tabla ", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 

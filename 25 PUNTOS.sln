@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "25 PUNTOS", "25 PUNTOS.cspr
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "25 AYC", "..\25 AYC\25 AYC.vdproj", "{FEEFCFF3-DDA0-4979-A442-0A174894916A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "25 AYC", "..\25 AYC\25 AYC.vdproj", "{6B955BC6-43D2-449C-B917-26BD4CEE1BC2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +19,6 @@ Global
 		{741E2B83-7844-4FC1-8D14-F66A0276D0C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FEEFCFF3-DDA0-4979-A442-0A174894916A}.Debug|Any CPU.ActiveCfg = Debug
 		{FEEFCFF3-DDA0-4979-A442-0A174894916A}.Release|Any CPU.ActiveCfg = Release
-		{6B955BC6-43D2-449C-B917-26BD4CEE1BC2}.Debug|Any CPU.ActiveCfg = Debug
-		{6B955BC6-43D2-449C-B917-26BD4CEE1BC2}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

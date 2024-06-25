@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.BTCerrar = new System.Windows.Forms.Button();
             this.BTConfig = new System.Windows.Forms.Button();
             this.LBPts = new System.Windows.Forms.Label();
@@ -68,7 +70,6 @@
             this.DGVBitacora = new System.Windows.Forms.DataGridView();
             this.timerAbiertas = new System.Windows.Forms.Timer(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label2 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -94,6 +95,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.BTCerrar);
             this.tabPage1.Controls.Add(this.BTConfig);
@@ -121,11 +123,31 @@
             this.tabPage1.Controls.Add(this.DGVMesas);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.tabPage1.Size = new System.Drawing.Size(890, 498);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "AUDITORIA MESAS";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(788, 68);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(29, 13);
+            this.label9.TabIndex = 41;
+            this.label9.Text = "V3.0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(15, 68);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(241, 24);
+            this.label2.TabIndex = 40;
+            this.label2.Text = "SELECCIONA LA MESA:";
             // 
             // BTCerrar
             // 
@@ -390,6 +412,7 @@
             this.DGVMesas.Name = "DGVMesas";
             this.DGVMesas.ReadOnly = true;
             this.DGVMesas.RowHeadersVisible = false;
+            this.DGVMesas.RowHeadersWidth = 51;
             this.DGVMesas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DGVMesas.Size = new System.Drawing.Size(865, 243);
             this.DGVMesas.TabIndex = 16;
@@ -406,7 +429,7 @@
             this.tabPage2.Controls.Add(this.DGVBitacora);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.tabPage2.Size = new System.Drawing.Size(890, 498);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "BITACORA";
@@ -495,6 +518,7 @@
             this.DGVBitacora.Name = "DGVBitacora";
             this.DGVBitacora.ReadOnly = true;
             this.DGVBitacora.RowHeadersVisible = false;
+            this.DGVBitacora.RowHeadersWidth = 51;
             this.DGVBitacora.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DGVBitacora.Size = new System.Drawing.Size(865, 294);
             this.DGVBitacora.TabIndex = 17;
@@ -511,16 +535,6 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.TimerCursor_Tick);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(15, 68);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(241, 24);
-            this.label2.TabIndex = 40;
-            this.label2.Text = "SELECCIONA LA MESA:";
             // 
             // Form1
             // 
@@ -600,6 +614,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button BTCerrar;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label9;
     }
 }
 

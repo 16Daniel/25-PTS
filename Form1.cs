@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using DesktopControl;
 using System.Configuration;
 using System.Diagnostics;
+using System.Net;
 
 namespace _25_PUNTOS
 {
@@ -27,7 +28,7 @@ namespace _25_PUNTOS
         public string Fin = ConfigurationManager.AppSettings.Get("Fin");
 
         private Timer timer;
-
+        string acceso;
         public Form1()
         {
             if (getPrevInstance())
@@ -54,6 +55,7 @@ namespace _25_PUNTOS
                 // Inicia el Timer
                 timer.Start();
             }
+
         }
 
         private static bool getPrevInstance()
@@ -97,7 +99,7 @@ namespace _25_PUNTOS
         {
             conexion.Open();
 
-            SqlCommand command = new SqlCommand("INSERT INTO TAYC25 (FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO) VALUES (@Fecha, @Sala, @Mesa, @TotalAYC, @Cobros, @CobrosMin, @Diferencia, @Justificacion, @Usu)", conexion);
+            SqlCommand command = new SqlCommand("INSERT INTO TAYC25 (FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO, VENDEDOR) VALUES (@Fecha, @Sala, @Mesa, @TotalAYC, @Cobros, @CobrosMin, @Diferencia, @Justificacion, @Usu, @Vendedor)", conexion);
 
             command.Parameters.Add("@Fecha", SqlDbType.DateTime).Value = DateTime.Now;
             command.Parameters.Add("@Sala", SqlDbType.SmallInt).Value = 0;
@@ -108,6 +110,7 @@ namespace _25_PUNTOS
             command.Parameters.Add("@Diferencia", SqlDbType.Int).Value = 0;
             command.Parameters.Add("@Justificacion", SqlDbType.NVarChar).Value = "prueba";
             command.Parameters.Add("@Usu", SqlDbType.NVarChar).Value = "prueba";
+            command.Parameters.Add("@Vendedor", SqlDbType.NVarChar).Value = "prueba";
 
 
             try
@@ -148,8 +151,8 @@ namespace _25_PUNTOS
         Boolean estadoN = false;
         Boolean estadoM = false;
         public void BuscarMesas(object sender, EventArgs e) {
-            string Consulta = "DECLARE @PTSXCOBRO INT = 25 SELECT C.FECHAINI,C.SALA, C.MESA ,SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) AS TOTAL_AYC, SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) AS TOTAL_COBROS, CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO) AS COBROS_MINIMOS,(SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) - CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO)) AS DIFERENCIA_COBROS FROM MINUTASCAB  C WITH(NOLOCK) INNER JOIN MINUTASLIN L WITH(NOLOCK) ON L.SALA = C.SALA AND L.MESA = C.MESA INNER JOIN ARTICULOS A WITH(NOLOCK) ON A.CODARTICULO = L.CODARTICULO INNER JOIN ARTICULOSCAMPOSLIBRES ACC WITH(NOLOCK) ON ACC.CODARTICULO = A.CODARTICULO WHERE (CONSUBTOTAL = 'F') AND (C.FECHAINI NOT IN (SELECT FECHAINI FROM TAYC25)) GROUP BY C.SALA, C.MESA, C.FECHAINI HAVING ((SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND (A.DESCATALOGADO='F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END)-CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC,0))/@PTSXCOBRO))) < 0 ORDER BY C.SALA, C.MESA, C.FECHAINI";
-
+            //string Consulta = "DECLARE @PTSXCOBRO INT = 25 SELECT C.FECHAINI,C.SALA, C.MESA ,SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) AS TOTAL_AYC, SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) AS TOTAL_COBROS, CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO) AS COBROS_MINIMOS,(SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) - CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO)) AS DIFERENCIA_COBROS FROM MINUTASCAB  C WITH(NOLOCK) INNER JOIN MINUTASLIN L WITH(NOLOCK) ON L.SALA = C.SALA AND L.MESA = C.MESA INNER JOIN ARTICULOS A WITH(NOLOCK) ON A.CODARTICULO = L.CODARTICULO INNER JOIN ARTICULOSCAMPOSLIBRES ACC WITH(NOLOCK) ON ACC.CODARTICULO = A.CODARTICULO WHERE (CONSUBTOTAL = 'F') AND (C.FECHAINI NOT IN (SELECT FECHAINI FROM TAYC25)) GROUP BY C.SALA, C.MESA, C.FECHAINI HAVING ((SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND (A.DESCATALOGADO='F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END)-CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC,0))/@PTSXCOBRO))) < 0 ORDER BY C.SALA, C.MESA, C.FECHAINI";
+            string Consulta = "DECLARE @PTSXCOBRO INT = 25 SELECT C.FECHAINI,C.SALA, C.MESA ,SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) AS TOTAL_AYC, SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR A.DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) AS TOTAL_COBROS, CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO) AS COBROS_MINIMOS,(SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR A.DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) - CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO)) AS DIFERENCIA_COBROS,V.NOMBREVENDEDOR AS VENDEDOR FROM MINUTASCAB  C WITH(NOLOCK) INNER JOIN MINUTASLIN L WITH(NOLOCK) ON L.SALA = C.SALA AND L.MESA = C.MESA INNER JOIN ARTICULOS A WITH(NOLOCK) ON A.CODARTICULO = L.CODARTICULO INNER JOIN ARTICULOSCAMPOSLIBRES ACC WITH(NOLOCK) ON ACC.CODARTICULO = A.CODARTICULO LEFT JOIN VENDEDORES V ON C.CODVENDEDOR = V.CODVENDEDOR WHERE (CONSUBTOTAL = 'F') AND (C.FECHAINI NOT IN (SELECT FECHAINI FROM TAYC25)) GROUP BY C.SALA, C.MESA, C.FECHAINI,V.NOMBREVENDEDOR HAVING ((SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND (A.DESCATALOGADO='F' OR A.DESCATALOGADO IS NULL) THEN 1  ELSE 0 END)-CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC,0))/@PTSXCOBRO))) < 0 ORDER BY C.SALA, C.MESA, C.FECHAINI";
             try
             {
 
@@ -236,6 +239,7 @@ namespace _25_PUNTOS
 
                 string acesso, status, Usuario;
                 acesso = datos.Tables[0].Rows[0][3].ToString();
+                acceso = datos.Tables[0].Rows[0][3].ToString();
                 status = datos.Tables[0].Rows[0][4].ToString();
                 Usuario = datos.Tables[0].Rows[0][1].ToString();//recupero el nombre de mi tabla usuario
                 // codigo para asignar foto en variable...
@@ -248,14 +252,14 @@ namespace _25_PUNTOS
                     if (acesso == "2")
                     {
 
-                        LBNombre.Text = ""+TBUsuario.Text;
-                        
+                        LBNombre.Text = "" + TBUsuario.Text;
+
                         Limpiar();
                         Muestra(acesso);
                     }
                     else
                     {
-                        if (acesso == "1")
+                        if (acesso == "1" || acesso == "3")
                         {
                             LBNombre.Text = "" + TBUsuario.Text;
                             
@@ -294,7 +298,7 @@ namespace _25_PUNTOS
             
         }
 
-        public string Fecha, Sala, Mesa, TotalAYC, TotalCB, TotalMIN, Diferencia;
+        public string Fecha, Sala, Mesa, TotalAYC, TotalCB, TotalMIN, Diferencia, Vendedor;
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -475,6 +479,7 @@ namespace _25_PUNTOS
             if (ConfigurationManager.AppSettings["status"] == "True") {
                 if (int.Parse(DateTime.Now.Hour.ToString()) >= int.Parse(Inicio) && int.Parse(DateTime.Now.Hour.ToString()) <= int.Parse(Fin))
                 {
+                   
                     BuscarMesas(sender, e);
                 }
                 else {
@@ -501,7 +506,7 @@ namespace _25_PUNTOS
         }
 
         private void MuestraBitacora(DateTime FechaFiltro) {
-            string Consulta = "SELECT  TOP (200) FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO FROM TAYC25 WHERE (CONVERT(VARCHAR(10),FECHAINI,111) = '"+FechaFiltro.ToString("yyyy/MM/dd") + "')";
+            string Consulta = "SELECT  TOP (200) FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO, VENDEDOR FROM TAYC25 WHERE (CONVERT(VARCHAR(10),FECHAINI,111) = '"+FechaFiltro.ToString("yyyy/MM/dd") + "')";
 
             try
             {
@@ -577,6 +582,7 @@ namespace _25_PUNTOS
             TotalCB = DataGridViewSeleccion.GetValorCelda(DGVMesas, 4);
             TotalMIN = DataGridViewSeleccion.GetValorCelda(DGVMesas, 5);
             Diferencia = DataGridViewSeleccion.GetValorCelda(DGVMesas, 6);
+            Vendedor = DataGridViewSeleccion.GetValorCelda(DGVMesas, 7);
 
             LBMesa.Text = DataGridViewSeleccion.GetValorCelda(DGVMesas, 2);
             LBSala.Text = DataGridViewSeleccion.GetValorCelda(DGVMesas, 1);
@@ -672,9 +678,19 @@ namespace _25_PUNTOS
 
             
             conexion.Open();
-            
-            SqlCommand command = new SqlCommand("INSERT INTO TAYC25 (FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO) VALUES (@Fecha, @Sala, @Mesa, @TotalAYC, @Cobros, @CobrosMin, @Diferencia, @Justificacion, @Usu)", conexion);
-            
+            string usuario = string.Empty; 
+            SqlCommand command = new SqlCommand("INSERT INTO TAYC25 (FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO,VENDEDOR) VALUES (@Fecha, @Sala, @Mesa, @TotalAYC, @Cobros, @CobrosMin, @Diferencia, @Justificacion, @Usu, @Vendedor)", conexion);
+
+            if (acceso == "1") 
+            {
+                usuario = LBNombre.Text + " (SUPERVISOR)";
+            }
+
+            if (acceso == "3")
+            {
+                usuario = LBNombre.Text + " (CAJERO)";
+            }
+
             command.Parameters.Add("@Fecha", SqlDbType.DateTime).Value = DateTime.Parse(Fecha);
             command.Parameters.Add("@Sala", SqlDbType.SmallInt).Value = int.Parse(Sala);
             command.Parameters.Add("@Mesa", SqlDbType.SmallInt).Value = int.Parse(Mesa);
@@ -682,9 +698,9 @@ namespace _25_PUNTOS
             command.Parameters.Add("@Cobros", SqlDbType.Int).Value = int.Parse(TotalCB);
             command.Parameters.Add("@CobrosMin", SqlDbType.Int).Value = int.Parse(TotalMIN);
             command.Parameters.Add("@Diferencia", SqlDbType.Int).Value =int.Parse(Diferencia);
-            command.Parameters.Add("@Justificacion", SqlDbType.NVarChar).Value = TBJustificacion.Text;
-            command.Parameters.Add("@Usu", SqlDbType.NVarChar).Value = LBNombre.Text;
-
+            command.Parameters.Add("@Justificacion", SqlDbType.NVarChar).Value = TBJustificacion.Text.ToUpper();
+            command.Parameters.Add("@Usu", SqlDbType.NVarChar).Value = usuario.ToUpper();
+            command.Parameters.Add("@Vendedor", SqlDbType.NVarChar).Value = Vendedor;
 
 
 
@@ -718,7 +734,8 @@ namespace _25_PUNTOS
             if (data.Tables[0].Rows.Count > 0)
             {
                 conexion.Open();
-                SqlCommand command = new SqlCommand("DECLARE @PTSXCOBRO INT = 25, @JUS nvarchar(max) = 'INCIDENCIA FUERA DE HORARIO DEL SUPERVISOR', @USU NVARCHAR(50)= 'CAJERO' INSERT INTO TAYC25 (FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO) SELECT C.FECHAINI,C.SALA, C.MESA ,SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) AS TOTAL_AYC, SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) AS TOTAL_COBROS, CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO) AS COBROS_MINIMOS,(SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) - CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO)) AS DIFERENCIA_COBROS,@JUS,@USU FROM MINUTASCAB  C WITH(NOLOCK) INNER JOIN MINUTASLIN L WITH(NOLOCK) ON L.SALA = C.SALA AND L.MESA = C.MESA INNER JOIN ARTICULOS A WITH(NOLOCK) ON A.CODARTICULO = L.CODARTICULO INNER JOIN ARTICULOSCAMPOSLIBRES ACC WITH(NOLOCK) ON ACC.CODARTICULO = A.CODARTICULO WHERE (CONSUBTOTAL = 'F') AND (C.FECHAINI NOT IN (SELECT FECHAINI FROM TAYC25)) GROUP BY C.SALA, C.MESA, C.FECHAINI HAVING ((SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND (A.DESCATALOGADO='F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END)-CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC,0))/@PTSXCOBRO))) < 0 ORDER BY C.SALA, C.MESA, C.FECHAINI", conexion);
+                //SqlCommand command = new SqlCommand("DECLARE @PTSXCOBRO INT = 25, @JUS nvarchar(max) = 'INCIDENCIA FUERA DE HORARIO DEL SUPERVISOR', @USU NVARCHAR(50)= 'CAJERO' INSERT INTO TAYC25 (FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO) SELECT C.FECHAINI,C.SALA, C.MESA ,SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) AS TOTAL_AYC, SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) AS TOTAL_COBROS, CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO) AS COBROS_MINIMOS,(SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) - CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO)) AS DIFERENCIA_COBROS,@JUS,@USU FROM MINUTASCAB  C WITH(NOLOCK) INNER JOIN MINUTASLIN L WITH(NOLOCK) ON L.SALA = C.SALA AND L.MESA = C.MESA INNER JOIN ARTICULOS A WITH(NOLOCK) ON A.CODARTICULO = L.CODARTICULO INNER JOIN ARTICULOSCAMPOSLIBRES ACC WITH(NOLOCK) ON ACC.CODARTICULO = A.CODARTICULO WHERE (CONSUBTOTAL = 'F') AND (C.FECHAINI NOT IN (SELECT FECHAINI FROM TAYC25)) GROUP BY C.SALA, C.MESA, C.FECHAINI HAVING ((SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND (A.DESCATALOGADO='F' OR DESCATALOGADO IS NULL) THEN 1  ELSE 0 END)-CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC,0))/@PTSXCOBRO))) < 0 ORDER BY C.SALA, C.MESA, C.FECHAINI", conexion);
+                SqlCommand command = new SqlCommand("DECLARE @PTSXCOBRO INT = 25, @JUS nvarchar(max) = 'INCIDENCIA FUERA DE HORARIO DEL SUPERVISOR', @USU NVARCHAR(50)= 'CAJERO' INSERT INTO TAYC25 (FECHAINI, SALA, MESA, TOTAL_AYC, COBROS, COBROS_MINIMOS, DIFERENCIA, JUSTIFICACION, USUARIO, VENDEDOR) SELECT C.FECHAINI,C.SALA, C.MESA ,SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) AS TOTAL_AYC, SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR A.DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) AS TOTAL_COBROS, CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO) AS COBROS_MINIMOS,(SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND(A.DESCATALOGADO = 'F' OR A.DESCATALOGADO IS NULL) THEN 1  ELSE 0 END) - CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC, 0)) / @PTSXCOBRO)) AS DIFERENCIA_COBROS,@JUS,@USU,V.NOMBREVENDEDOR AS VENDEDOR FROM MINUTASCAB  C WITH(NOLOCK) INNER JOIN MINUTASLIN L WITH(NOLOCK) ON L.SALA = C.SALA AND L.MESA = C.MESA INNER JOIN ARTICULOS A WITH(NOLOCK) ON A.CODARTICULO = L.CODARTICULO INNER JOIN ARTICULOSCAMPOSLIBRES ACC WITH(NOLOCK) ON ACC.CODARTICULO = A.CODARTICULO LEFT JOIN VENDEDORES V ON C.CODVENDEDOR = V.CODVENDEDOR WHERE (CONSUBTOTAL = 'F') AND (C.FECHAINI NOT IN (SELECT FECHAINI FROM TAYC25)) GROUP BY C.SALA, C.MESA, C.FECHAINI,V.NOMBREVENDEDOR HAVING ((SUM(L.UNIDADES * CASE WHEN A.DESCRIPCION LIKE '%($)%' AND (A.DESCATALOGADO='F' OR A.DESCATALOGADO IS NULL) THEN 1  ELSE 0 END)-CEILING(SUM(L.UNIDADES * ISNULL(ACC.VALOR_AYC,0))/@PTSXCOBRO))) < 0 ORDER BY C.SALA, C.MESA, C.FECHAINI", conexion);
 
                 try
                 {
